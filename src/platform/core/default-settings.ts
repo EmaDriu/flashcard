@@ -43,6 +43,8 @@ export const DEFAULT_SETTINGS: LearnKitSettings = {
   study: {
     showInfoByDefault: false,
 
+    aiGradeEnabled: false,
+
     dailyNewLimit: 20,
     dailyReviewLimit: 200,
 

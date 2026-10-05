@@ -1225,8 +1225,8 @@ export class LearnKitSettingsTab extends PluginSettingTab {
         text: this._tx(
           "ui.settings.audio.description",
           "Read flashcard content aloud using built-in text-to-speech. " +
-            "Non-Latin scripts are auto-detected and matched to the best available voice. " +
-            "Latin-script text uses your default voice.",
+          "Non-Latin scripts are auto-detected and matched to the best available voice. " +
+          "Latin-script text uses your default voice.",
         ),
       });
     }
@@ -1329,7 +1329,7 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           this._tx(
             "ui.settings.audio.clozeAnswerMode.desc",
             "Just the answer reads the cloze deletion only. " +
-              "Full sentence reads the complete sentence with the answer filled in.",
+            "Full sentence reads the complete sentence with the answer filled in.",
           ),
         options: [
           { value: "cloze-only", label: this._tx("ui.settings.audio.clozeAnswerMode.option.clozeOnly", "Just the answer") },
@@ -1393,9 +1393,9 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           this._tx(
             "ui.settings.audio.defaultVoice.desc",
             "Set the accent and dialect for Latin-script text. " +
-              "Also determines the word for blank on cloze fronts.",
+            "Also determines the word for blank on cloze fronts.",
           ),
-          options: langOptions.map((o) => ({ value: o.value, label: o.label, flagCode: o.flagCode })),
+        options: langOptions.map((o) => ({ value: o.value, label: o.label, flagCode: o.flagCode })),
         value: audio.defaultLanguage || "en-US",
         onChange: (v) => {
           void (async () => {
@@ -1452,7 +1452,7 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           this._addSearchablePopover(advancedContent, {
             name: group.label,
             description: group.description,
-              options: group.languages.map((o) => ({ value: o.value, label: o.label, flagCode: o.flagCode })),
+            options: group.languages.map((o) => ({ value: o.value, label: o.label, flagCode: o.flagCode })),
             value: audio.scriptLanguages[group.key],
             onChange: (v) => {
               void (async () => {
@@ -1553,7 +1553,7 @@ export class LearnKitSettingsTab extends PluginSettingTab {
             this._tx(
               "ui.settings.audio.availableVoices.desc",
               "No system voices detected yet. Voices load asynchronously, so try reopening this tab. " +
-                "If it is still empty, check your operating system's speech settings.",
+              "If it is still empty, check your operating system's speech settings.",
             ),
           );
       }
@@ -1695,35 +1695,35 @@ export class LearnKitSettingsTab extends PluginSettingTab {
               { value: "sage", label: "Sage" },
               { value: "shimmer", label: "Shimmer" },
             ]
-            : audio.ttsProvider === "elevenlabs" ? [
-              { value: "21m00Tcm4TlvDq8ikWAM", label: "Rachel", description: "Calm, narration" },
-              { value: "AZnzlk1XvdvUeBnXmlld", label: "Domi", description: "Confident, authoritative" },
-              { value: "EXAVITQu4vr4xnSDxMaL", label: "Bella", description: "Soft, warm" },
-              { value: "ErXwobaYiN019PkySvjV", label: "Antoni", description: "Well-rounded, expressive" },
-              { value: "MF3mGyEYCl7XYWbV9V6O", label: "Elli", description: "Young, friendly" },
-              { value: "TxGEqnHWrfWFTfGW9XjX", label: "Josh", description: "Deep, narrative" },
-              { value: "VR6AewLTigWG4xSOukaG", label: "Arnold", description: "Strong, authoritative" },
-              { value: "pNInz6obpgDQGcFmaJgB", label: "Adam", description: "Deep, clear" },
-              { value: "yoZ06aMxZJJ28mfd3POQ", label: "Sam", description: "Raspy, engaging" },
-              { value: "jBpfuIE2acCO8z3wKNLl", label: "Gigi", description: "Childlike, animated" },
-              { value: "onwK4e9ZLuTAKqWW03F9", label: "Daniel", description: "Authoritative, British" },
-              { value: "XB0fDUnXU5powFXDhCwa", label: "Charlotte", description: "Natural, warm" },
-            ]
-            : audio.ttsProvider === "google-cloud" ? [
-              { value: "en-US-Neural2-A", label: "Neural2-A", description: "Female (US English)" },
-              { value: "en-US-Neural2-C", label: "Neural2-C", description: "Female (US English)" },
-              { value: "en-US-Neural2-D", label: "Neural2-D", description: "Male (US English)" },
-              { value: "en-US-Neural2-F", label: "Neural2-F", description: "Female (US English)" },
-              { value: "en-US-Neural2-I", label: "Neural2-I", description: "Male (US English)" },
-              { value: "en-US-Neural2-J", label: "Neural2-J", description: "Male (US English)" },
-              { value: "en-US-Studio-O", label: "Studio-O", description: "Female (US English)" },
-              { value: "en-US-Studio-Q", label: "Studio-Q", description: "Male (US English)" },
-              { value: "en-US-Wavenet-A", label: "Wavenet-A", description: "Male (US English)" },
-              { value: "en-US-Wavenet-C", label: "Wavenet-C", description: "Female (US English)" },
-              { value: "en-US-Wavenet-D", label: "Wavenet-D", description: "Male (US English)" },
-              { value: "en-US-Wavenet-F", label: "Wavenet-F", description: "Female (US English)" },
-            ]
-            : [];
+              : audio.ttsProvider === "elevenlabs" ? [
+                { value: "21m00Tcm4TlvDq8ikWAM", label: "Rachel", description: "Calm, narration" },
+                { value: "AZnzlk1XvdvUeBnXmlld", label: "Domi", description: "Confident, authoritative" },
+                { value: "EXAVITQu4vr4xnSDxMaL", label: "Bella", description: "Soft, warm" },
+                { value: "ErXwobaYiN019PkySvjV", label: "Antoni", description: "Well-rounded, expressive" },
+                { value: "MF3mGyEYCl7XYWbV9V6O", label: "Elli", description: "Young, friendly" },
+                { value: "TxGEqnHWrfWFTfGW9XjX", label: "Josh", description: "Deep, narrative" },
+                { value: "VR6AewLTigWG4xSOukaG", label: "Arnold", description: "Strong, authoritative" },
+                { value: "pNInz6obpgDQGcFmaJgB", label: "Adam", description: "Deep, clear" },
+                { value: "yoZ06aMxZJJ28mfd3POQ", label: "Sam", description: "Raspy, engaging" },
+                { value: "jBpfuIE2acCO8z3wKNLl", label: "Gigi", description: "Childlike, animated" },
+                { value: "onwK4e9ZLuTAKqWW03F9", label: "Daniel", description: "Authoritative, British" },
+                { value: "XB0fDUnXU5powFXDhCwa", label: "Charlotte", description: "Natural, warm" },
+              ]
+                : audio.ttsProvider === "google-cloud" ? [
+                  { value: "en-US-Neural2-A", label: "Neural2-A", description: "Female (US English)" },
+                  { value: "en-US-Neural2-C", label: "Neural2-C", description: "Female (US English)" },
+                  { value: "en-US-Neural2-D", label: "Neural2-D", description: "Male (US English)" },
+                  { value: "en-US-Neural2-F", label: "Neural2-F", description: "Female (US English)" },
+                  { value: "en-US-Neural2-I", label: "Neural2-I", description: "Male (US English)" },
+                  { value: "en-US-Neural2-J", label: "Neural2-J", description: "Male (US English)" },
+                  { value: "en-US-Studio-O", label: "Studio-O", description: "Female (US English)" },
+                  { value: "en-US-Studio-Q", label: "Studio-Q", description: "Male (US English)" },
+                  { value: "en-US-Wavenet-A", label: "Wavenet-A", description: "Male (US English)" },
+                  { value: "en-US-Wavenet-C", label: "Wavenet-C", description: "Female (US English)" },
+                  { value: "en-US-Wavenet-D", label: "Wavenet-D", description: "Male (US English)" },
+                  { value: "en-US-Wavenet-F", label: "Wavenet-F", description: "Female (US English)" },
+                ]
+                  : [];
 
           if (ttsVoiceOptions.length > 0) {
             const currentVoice = String(audio.ttsVoiceId || "").trim();
@@ -1777,14 +1777,14 @@ export class LearnKitSettingsTab extends PluginSettingTab {
             audio.ttsProvider === "openai" ? [
               { value: "gpt-4o-mini-tts", label: "GPT-4o Mini TTS", description: "Expressive, steerable, multilingual" },
             ]
-            : audio.ttsProvider === "elevenlabs" ? [
-              { value: "eleven_multilingual_v2", label: "Multilingual v2", description: "29 languages" },
-              { value: "eleven_turbo_v2_5", label: "Turbo v2.5", description: "Low-latency, 32 languages" },
-            ]
-            : audio.ttsProvider === "google-cloud" ? [
-              { value: "default", label: "Default", description: "Uses the voice's native model" },
-            ]
-            : [];
+              : audio.ttsProvider === "elevenlabs" ? [
+                { value: "eleven_multilingual_v2", label: "Multilingual v2", description: "29 languages" },
+                { value: "eleven_turbo_v2_5", label: "Turbo v2.5", description: "Low-latency, 32 languages" },
+              ]
+                : audio.ttsProvider === "google-cloud" ? [
+                  { value: "default", label: "Default", description: "Uses the voice's native model" },
+                ]
+                  : [];
 
           if (ttsModelOptions.length > 0) {
             const currentModel = String(audio.ttsModel || "").trim();
@@ -2572,7 +2572,20 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           },
         });
       });
-
+    new Setting(wrapper)
+      .setName(this._tx("ui.settings.study.aiGrade.name", "AI answer grading"))
+      .setDesc(this._tx("ui.settings.study.aiGrade.desc", "Show a text box on basic flashcards..."))
+      .addToggle((toggle) =>
+        toggle
+          .setValue(!!this.plugin.settings.study.aiGradeEnabled)
+          .onChange((value) => {
+            void (async () => {
+              this.plugin.settings.study.aiGradeEnabled = value;
+              await this.plugin.saveAll();
+              this.refreshReviewerViewsIfPossible();
+            })();
+          }),
+      );
     new Setting(wrapper)
       .setName(this._tx("ui.settings.study.gradeIntervals.name", "Show grade intervals"))
       .setDesc(this._tx("ui.settings.study.gradeIntervals.desc", "Show next review times under grade buttons in reviewer and widget."))
@@ -3676,8 +3689,8 @@ export class LearnKitSettingsTab extends PluginSettingTab {
       .setDesc(this._tx(
         "ui.settings.studyAssistant.info.desc",
         "Companion uses a bring-your-own API key model. Cost depends on the provider and model. " +
-          "Free and paid providers are supported — Google, OpenRouter, Anthropic, OpenAI, Perplexity, and more. " +
-          "No subscription fees or API markups. For a free start, try Auto Router on OpenRouter.",
+        "Free and paid providers are supported — Google, OpenRouter, Anthropic, OpenAI, Perplexity, and more. " +
+        "No subscription fees or API markups. For a free start, try Auto Router on OpenRouter.",
       ));
 
     new Setting(wrapper).setName(this._tx("ui.settings.studyAssistant.sections.enableSprig", "Enable Companion")).setHeading();
@@ -4004,10 +4017,10 @@ export class LearnKitSettingsTab extends PluginSettingTab {
 
       withDependentSetting(
         new Setting(wrapper)
-            .setName(this._tx(`ui.settings.studyAssistant.keys.${currentKeyToken}.name`, currentKeyField.label))
+          .setName(this._tx(`ui.settings.studyAssistant.keys.${currentKeyToken}.name`, currentKeyField.label))
           .setDesc(
             this._tx(
-                `ui.settings.studyAssistant.keys.${currentKeyToken}.desc`,
+              `ui.settings.studyAssistant.keys.${currentKeyToken}.desc`,
               "Stored at {path}. Add this file to .gitignore if syncing with Git.",
               { path: apiKeysPath },
             ),
@@ -4614,39 +4627,39 @@ export class LearnKitSettingsTab extends PluginSettingTab {
       relearning: number[];
       retention: number;
     }> = [
-      {
-        key: "custom",
-        label: this._tx("ui.settings.scheduling.preset.option.custom", "Custom"),
-        desc: this._tx("ui.settings.scheduling.preset.option.customDesc", "Keep your current values."),
-        learning: [],
-        relearning: [],
-        retention: 0.9,
-      },
-      {
-        key: "relaxed",
-        label: this._tx("ui.settings.scheduling.preset.option.relaxed", "Relaxed"),
-        desc: this._tx("ui.settings.scheduling.preset.option.relaxedDesc", "Learning: 20m | Relearning: 20m | Retention: 0.88"),
-        learning: [20],
-        relearning: [20],
-        retention: 0.88,
-      },
-      {
-        key: "balanced",
-        label: this._tx("ui.settings.scheduling.preset.option.balanced", "Balanced"),
-        desc: this._tx("ui.settings.scheduling.preset.option.balancedDesc", "Learning: 10m, 1d | Relearning: 10m | Retention: 0.90"),
-        learning: [10, 1440],
-        relearning: [10],
-        retention: 0.9,
-      },
-      {
-        key: "aggressive",
-        label: this._tx("ui.settings.scheduling.preset.option.aggressive", "Aggressive"),
-        desc: this._tx("ui.settings.scheduling.preset.option.aggressiveDesc", "Learning: 5m, 30m, 1d | Relearning: 10m | Retention: 0.92"),
-        learning: [5, 30, 1440],
-        relearning: [10],
-        retention: 0.92,
-      },
-    ];
+        {
+          key: "custom",
+          label: this._tx("ui.settings.scheduling.preset.option.custom", "Custom"),
+          desc: this._tx("ui.settings.scheduling.preset.option.customDesc", "Keep your current values."),
+          learning: [],
+          relearning: [],
+          retention: 0.9,
+        },
+        {
+          key: "relaxed",
+          label: this._tx("ui.settings.scheduling.preset.option.relaxed", "Relaxed"),
+          desc: this._tx("ui.settings.scheduling.preset.option.relaxedDesc", "Learning: 20m | Relearning: 20m | Retention: 0.88"),
+          learning: [20],
+          relearning: [20],
+          retention: 0.88,
+        },
+        {
+          key: "balanced",
+          label: this._tx("ui.settings.scheduling.preset.option.balanced", "Balanced"),
+          desc: this._tx("ui.settings.scheduling.preset.option.balancedDesc", "Learning: 10m, 1d | Relearning: 10m | Retention: 0.90"),
+          learning: [10, 1440],
+          relearning: [10],
+          retention: 0.9,
+        },
+        {
+          key: "aggressive",
+          label: this._tx("ui.settings.scheduling.preset.option.aggressive", "Aggressive"),
+          desc: this._tx("ui.settings.scheduling.preset.option.aggressiveDesc", "Learning: 5m, 30m, 1d | Relearning: 10m | Retention: 0.92"),
+          learning: [5, 30, 1440],
+          relearning: [10],
+          retention: 0.92,
+        },
+      ];
 
     const selectOptions = presets.map((p) => ({ value: p.key, label: p.label }));
 
@@ -4847,13 +4860,13 @@ export class LearnKitSettingsTab extends PluginSettingTab {
     const optimiseDesc = () =>
       hasWeights()
         ? this._tx(
-            "ui.settings.optimisation.optimise.descActive",
-            "Personalised FSRS parameters are active. The algorithm uses weights trained on your review history to predict your forgetting curve. This works alongside any preset above.",
-          )
+          "ui.settings.optimisation.optimise.descActive",
+          "Personalised FSRS parameters are active. The algorithm uses weights trained on your review history to predict your forgetting curve. This works alongside any preset above.",
+        )
         : this._tx(
-            "ui.settings.optimisation.optimise.desc",
-            "Train FSRS parameters on your review history to personalise how intervals are calculated. This improves scheduling accuracy without changing your learning steps, retention, or preset. 250+ graded reviews recommended for best results.",
-          );
+          "ui.settings.optimisation.optimise.desc",
+          "Train FSRS parameters on your review history to personalise how intervals are calculated. This improves scheduling accuracy without changing your learning steps, retention, or preset. 250+ graded reviews recommended for best results.",
+        );
 
     const optimiseSetting = new Setting(wrapper)
       .setName(this._tx("ui.settings.optimisation.optimise.name", "Optimise FSRS parameters"))
@@ -6189,21 +6202,21 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           .setButtonText(this._tx("ui.settings.reset.defaults.button", "Reset"))
           .setClass("sprout-btn-danger")
           .onClick(() => {
-          new ConfirmResetDefaultsModal(this.app, this.plugin, async () => {
-            const before = clonePlain(this.plugin.settings);
-            try {
-              await this.resetSettingsToDefaults();
+            new ConfirmResetDefaultsModal(this.app, this.plugin, async () => {
+              const before = clonePlain(this.plugin.settings);
+              try {
+                await this.resetSettingsToDefaults();
 
-              this.refreshReviewerViewsIfPossible();
-              this.refreshAllWidgetViews();
-              this.queueSettingsNotice("settings.resetDefaults", this._noticeLines.settingsResetDefaults, 0);
-            } catch (e) {
-              this.plugin.settings = before;
-              log.error(e);
-              new Notice(this._noticeLines.settingsResetFailed);
-            }
-          }).open();
-        }),
+                this.refreshReviewerViewsIfPossible();
+                this.refreshAllWidgetViews();
+                this.queueSettingsNotice("settings.resetDefaults", this._noticeLines.settingsResetDefaults, 0);
+              } catch (e) {
+                this.plugin.settings = before;
+                log.error(e);
+                new Notice(this._noticeLines.settingsResetFailed);
+              }
+            }).open();
+          }),
       );
 
     new Setting(wrapper)
@@ -6223,8 +6236,8 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           .setButtonText(this._tx("ui.settings.reset.analytics.button", "Reset"))
           .setClass("sprout-btn-danger")
           .onClick(() => {
-          new ConfirmResetAnalyticsModal(this.app, this.plugin).open();
-        }),
+            new ConfirmResetAnalyticsModal(this.app, this.plugin).open();
+          }),
       );
 
     new Setting(wrapper)
@@ -6244,8 +6257,8 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           .setButtonText(this._tx("ui.settings.reset.scheduling.button", "Reset"))
           .setClass("sprout-btn-danger")
           .onClick(() => {
-          new ConfirmResetSchedulingModal(this.app, this.plugin).open();
-        }),
+            new ConfirmResetSchedulingModal(this.app, this.plugin).open();
+          }),
       );
 
     // ----------------------------
@@ -6270,19 +6283,19 @@ export class LearnKitSettingsTab extends PluginSettingTab {
           .setButtonText(this._tx("ui.settings.reset.deleteAllFlashcards.button", "Delete"))
           .setClass("sprout-btn-danger")
           .onClick(() => {
-          new ConfirmDeleteAllFlashcardsModal(this.app, this.plugin, async () => {
-            const before = Date.now();
+            new ConfirmDeleteAllFlashcardsModal(this.app, this.plugin, async () => {
+              const before = Date.now();
 
-            const { filesTouched, anchorsRemoved, cardsRemoved } = await this.deleteAllSproutDataFromVault();
-            await this.clearSproutStore();
+              const { filesTouched, anchorsRemoved, cardsRemoved } = await this.deleteAllSproutDataFromVault();
+              await this.clearSproutStore();
 
-            this.refreshAllWidgetViews();
-            this.refreshReviewerViewsIfPossible();
+              this.refreshAllWidgetViews();
+              this.refreshReviewerViewsIfPossible();
 
-            const secs = Math.max(0, Math.round((Date.now() - before) / 100) / 10);
-            new Notice(this._noticeLines.deleteAllSummary(cardsRemoved, anchorsRemoved, filesTouched, secs));
-          }).open();
-        }),
+              const secs = Math.max(0, Math.round((Date.now() - before) / 100) / 10);
+              new Notice(this._noticeLines.deleteAllSummary(cardsRemoved, anchorsRemoved, filesTouched, secs));
+            }).open();
+          }),
       );
   }
 

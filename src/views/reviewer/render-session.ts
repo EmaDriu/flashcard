@@ -26,6 +26,7 @@ import { renderLatexMathInElement, replaceChildrenWithHTML } from "../../platfor
 import { hydrateCircleFlagsInElement, processCircleFlagsInMarkdown } from "../../platform/flags/flag-tokens";
 import { t } from "../../platform/translations/translator";
 import { getRatingIntervalPreview } from "../../platform/core/grade-intervals";
+import { isAiResult, type AiGradeState } from "./ai-grade";
 import type { CardState, SchedulerSettings } from "../../platform/types/scheduler";
 
 declare global {
@@ -134,6 +135,13 @@ type Args = {
   ttsReplayOqQuestion?: () => void;
   ttsReplayOqSteps?: () => void;
   ttsReplayOqAnswer?: () => void;
+
+  // AI
+  aiGradeEnabled?: boolean;
+  aiDraft?: string;
+  aiState?: AiGradeState;
+  onAiDraft?: (v: string) => void;
+  onAiSubmit?: (v: string) => void;
 
   /** Hide the card-title topbar inside the session card. */
   hideSessionTopbar?: boolean;
@@ -584,7 +592,7 @@ function makeHeaderMenu(opts: {
   menu.className = "learnkit flex flex-col";
   menu.setAttribute("role", "menu");
   menu.id = `${id}-menu`;
-  
+
   panel.appendChild(menu);
 
   const addItem = (label: string, hotkey: string | null, onClick: () => void, disabled = false, ariaLabel?: string) => {
@@ -1141,12 +1149,12 @@ export function renderSessionMode(args: Args) {
   const isPhoneMobile = activeDocument.body.classList.contains("is-phone");
   const applyAOS = !!args.applyAOS;
   const delayMs = Number.isFinite(args.aosDelayMs) ? Number(args.aosDelayMs) : applyAOS ? 100 : 0;
-  
+
   const canUndo = !!args.canUndo && typeof args.undoLast === "function";
   const hasStartPractice = typeof args.startPractice === "function";
   const canStartPractice = !practiceMode && (!!args.canStartPractice || hasStartPractice);
   const hasCardsInScope = args.hasCardsInScope !== false;
-  
+
   const card = args.currentCard();
   const id = card ? String(card.id) : "";
   const graded = args.session?.graded?.[id] || null;
@@ -1436,9 +1444,42 @@ export function renderSessionMode(args: Args) {
     section.appendChild(labelRow(t(args.interfaceLanguage, "ui.common.question", "Question"), replayFront));
     section.appendChild(renderMdBlock("learnkit-q", convertInlineDisplayMath(frontContent)));
 
+    if (args.aiGradeEnabled && !args.showAnswer && !graded) {
+      const ta = activeDocument.createElement("textarea");
+      ta.className = "learnkit-ai-answer textarea w-full";
+      ta.rows = 4;
+      ta.placeholder = "Scrivi (o detta) la tua risposta…  Ctrl/Cmd+Invio per valutare";
+      ta.value = args.aiDraft ?? "";
+      ta.addEventListener("input", () => args.onAiDraft?.(ta.value));
+      ta.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && ta.value.trim()) {
+          e.preventDefault();
+          args.onAiSubmit?.(ta.value);
+        }
+      });
+      section.appendChild(ta);
+    }
+
     if (args.showAnswer || graded) {
       section.appendChild(labelRow(t(args.interfaceLanguage, "ui.common.answer", "Answer"), replayBack));
       section.appendChild(renderMdBlock("learnkit-a", convertInlineDisplayMath(backContent)));
+
+      const st = args.aiState;
+      if (st) {
+        const box = activeDocument.createElement("div");
+        box.className = "learnkit-ai-feedback card p-3 text-sm";
+        if (st === "loading") {
+          box.textContent = "Valutazione in corso…";
+        } else if (isAiResult(st)) {
+          box.createEl("strong", { text: `${Math.round(st.scorePercent)}% — consigliato: ${st.suggested}` });
+          box.createEl("p", { text: st.feedback });
+          if (st.missed.length) box.createEl("p", { text: "Mancano: " + st.missed.join("; ") });
+          if (st.wrong.length) box.createEl("p", { text: "Errori: " + st.wrong.join("; ") });
+        } else {
+          box.textContent = `Valutazione AI non riuscita: ${st.error}`;
+        }
+        section.appendChild(box);
+      }
     }
   } else if (card.type === "cloze" || card.type === "cloze-child") {
     const text = String(card.clozeText || "");
@@ -1612,6 +1653,17 @@ export function renderSessionMode(args: Args) {
         kbd: isPhoneMobile ? undefined : "↵",
       }),
     );
+    if (args.aiGradeEnabled && !args.showAnswer && !graded) {
+      mainRow.appendChild(makeTextButton({
+        label: "Valuta con AI",
+        className: "learnkit-btn-toolbar",
+        onClick: () => {
+          const v = section.querySelector<HTMLTextAreaElement>(".learnkit-ai-answer")?.value ?? "";
+          if (v.trim()) args.onAiSubmit?.(v);
+        },
+        kbd: "⌘↵",
+      }));
+    }
     hasMainRowContent = true;
   }
 
@@ -1639,10 +1691,14 @@ export function renderSessionMode(args: Args) {
         );
       };
       const gradeAndContinue = (rating: Rating) => {
+        const ai = isAiResult(args.aiState) ? args.aiState : null;
+        const meta = ai
+          ? { aiGraded: true, aiScore: ai.scorePercent, aiSuggested: ai.suggested }
+          : {};
         const usePendingManualGrade = !!args.usePendingManualGrade && !!args.gradePendingRating;
         const gradePromise = usePendingManualGrade
           ? args.gradePendingRating!(rating)
-          : args.gradeCurrentRating(rating, {});
+          : args.gradeCurrentRating(rating, meta);
         void gradePromise.then(goNext);
       };
 
@@ -1663,6 +1719,8 @@ export function renderSessionMode(args: Args) {
         mainRow.appendChild(group);
         hasMainRowContent = true;
 
+        const sug = isAiResult(args.aiState) ? args.aiState.suggested : null;
+
         const againBtn = makeTextButton({
           label: t(args.interfaceLanguage, "ui.widget.grade.again", "Again"),
           subtitle: getSubtitle("again"),
@@ -1672,6 +1730,7 @@ export function renderSessionMode(args: Args) {
           kbd: "1",
         });
         againBtn.classList.add("learnkit-btn-again", "learnkit-btn-again");
+        if (sug === "again") againBtn.classList.add("learnkit-btn-suggested");
         group.appendChild(againBtn);
 
         if (four) {
@@ -1684,6 +1743,7 @@ export function renderSessionMode(args: Args) {
             kbd: "2",
           });
           hardBtn.classList.add("learnkit-btn-hard", "learnkit-btn-hard");
+          if (sug === "hard") hardBtn.classList.add("learnkit-btn-suggested");
           group.appendChild(hardBtn);
 
           const goodBtn = makeTextButton({
@@ -1695,6 +1755,7 @@ export function renderSessionMode(args: Args) {
             kbd: "3",
           });
           goodBtn.classList.add("learnkit-btn-good", "learnkit-btn-good");
+          if (sug === "good") goodBtn.classList.add("learnkit-btn-suggested");
           group.appendChild(goodBtn);
 
           const easyBtn = makeTextButton({
@@ -1706,6 +1767,7 @@ export function renderSessionMode(args: Args) {
             kbd: "4",
           });
           easyBtn.classList.add("learnkit-btn-easy", "learnkit-btn-easy");
+          if (sug === "easy") easyBtn.classList.add("learnkit-btn-suggested");
           group.appendChild(easyBtn);
         } else {
           const goodBtn = makeTextButton({
@@ -1717,6 +1779,7 @@ export function renderSessionMode(args: Args) {
             kbd: "2",
           });
           goodBtn.classList.add("learnkit-btn-good", "learnkit-btn-good");
+          if (sug === "good") goodBtn.classList.add("learnkit-btn-suggested");
           group.appendChild(goodBtn);
         }
       }

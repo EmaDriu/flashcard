@@ -606,3 +606,7 @@ button.learnkit-guide-dropdown-item:hover {
   background-color: var(--accent, var(--color-base-25)) ;
   color: var(--accent-foreground, var(--text-normal)) ;
 }
+
+.learnkit-btn-suggested {
+  outline: 2px solid var(--interactive-accent);
+}

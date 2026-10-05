@@ -69,6 +69,7 @@ import {
 
 // ✅ shared header import (like browser.ts)
 import { type SproutHeader, createViewHeader } from "../../platform/core/header";
+import { AiGradeState, gradeAnswerWithAi, supportsAiGrade } from "./ai-grade";
 
 function isFourButtonMode(plugin: LearnKitPlugin): boolean {
   return !!(plugin.settings?.study?.fourButtonMode);
@@ -154,6 +155,8 @@ export class SproutReviewerView extends ItemView {
 
   /** Restore keyboard focus after render() rebuilds the DOM. */
   private _restoreFocus() {
+    const ta = this.contentEl.querySelector<HTMLTextAreaElement>(".learnkit-ai-answer");
+    if (ta && !this.showAnswer) { ta.focus({ preventScroll: true }); return; }
     const first = this.contentEl.querySelector<HTMLElement>(
       'button:not([disabled]), [tabindex="0"]',
     );
@@ -180,6 +183,26 @@ export class SproutReviewerView extends ItemView {
 
   // TTS: track what we've already spoken to avoid duplicate reads
   private _ttsLastSpokenKey = "";
+
+  // AI 
+  private _aiDrafts = new Map<string, string>();
+  private _aiStates = new Map<string, AiGradeState>();
+
+  async aiGradeCurrentAnswer(typed: string) {
+  const card = this.currentCard();
+  if (!card || !supportsAiGrade(card)) return;
+    const id = String(card.id);
+    this._aiDrafts.set(id, typed);
+    this._aiStates.set(id, "loading");
+    this.showAnswer = true;      // mostra la risposta corretta insieme al feedback
+    this.render();
+    try {
+      this._aiStates.set(id, await gradeAnswerWithAi(this.plugin, card, typed, isFourButtonMode(this.plugin)));
+    } catch (e) {
+      this._aiStates.set(id, { error: e instanceof Error ? e.message : String(e) });
+    }
+    if (String(this.currentCard()?.id) === id) this.render();
+  }
 
   private _cardPassesTtsGroupFilter(card: CardRecord, groupFilterRaw: string): boolean {
     const groupFilter = groupFilterRaw.trim().toLowerCase();
@@ -2025,6 +2048,7 @@ export class SproutReviewerView extends ItemView {
     let requeueTargetIndex: number | null = null;
     if (card) {
       const id = String(card.id);
+      this._aiDrafts.delete(id); this._aiStates.delete(id);
       this._clearPendingManualGradeMeta(id);
       this._clearPendingHotspotAttempt(id);
       if (!this.session.graded[id]) {
@@ -2087,7 +2111,8 @@ export class SproutReviewerView extends ItemView {
     this.clearTimer();
     this.clearCountdown();
     closeMoreMenuImpl(this);
-
+    this._aiDrafts.clear();
+    this._aiStates.clear();
     this.mode = "session";
     this._firstSessionRender = true;
     this.session = this.buildSession(scope);
@@ -2166,7 +2191,8 @@ export class SproutReviewerView extends ItemView {
     this.clearTimer();
     this.clearCountdown();
     closeMoreMenuImpl(this);
-
+    this._aiDrafts.clear();
+    this._aiStates.clear();
     this.mode = "deck";
     this._firstDeckRender = true;
     this._isCoachSession = false;
@@ -2757,6 +2783,12 @@ export class SproutReviewerView extends ItemView {
 
           session: this.session,
           showAnswer: this.showAnswer,
+          aiGradeEnabled: !!this.plugin.settings.study?.aiGradeEnabled && !!activeCard && supportsAiGrade(activeCard),
+          aiDraft: activeCard ? this._aiDrafts.get(String(activeCard.id)) ?? "" : "",
+          aiState: activeCard ? this._aiStates.get(String(activeCard.id)) : undefined,
+          onAiDraft: (v: string) => { if (activeCard) this._aiDrafts.set(String(activeCard.id), v); },
+          onAiSubmit: (v: string) => void this.aiGradeCurrentAnswer(v),
+          
           setShowAnswer: (v: boolean) => {
             this.showAnswer = v;
             if (v) {
@@ -3037,6 +3069,12 @@ export class SproutReviewerView extends ItemView {
 
       session: this.session,
       showAnswer: this.showAnswer,
+      aiGradeEnabled: !!this.plugin.settings.study?.aiGradeEnabled && !!activeCard && supportsAiGrade(activeCard),
+      aiDraft: activeCard ? this._aiDrafts.get(String(activeCard.id)) ?? "" : "",
+      aiState: activeCard ? this._aiStates.get(String(activeCard.id)) : undefined,
+      onAiDraft: (v: string) => { if (activeCard) this._aiDrafts.set(String(activeCard.id), v); },
+      onAiSubmit: (v: string) => void this.aiGradeCurrentAnswer(v),
+      
       setShowAnswer: (v: boolean) => {
         this.showAnswer = v;
         // TTS: speak back of card when answer is revealed

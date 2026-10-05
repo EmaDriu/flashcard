@@ -51,6 +51,9 @@ export type LearnKitSettings = {
     /** Whether the Info field is expanded by default on the card back. */
     showInfoByDefault: boolean;
 
+    /** Whether AI grading is enabled. */
+    aiGradeEnabled: boolean;
+
     /** Maximum new cards introduced per day. */
     dailyNewLimit: number;
     /** Maximum review cards shown per day. */
