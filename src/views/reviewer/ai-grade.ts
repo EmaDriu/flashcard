@@ -43,6 +43,7 @@ export async function gradeAnswerWithAi(
     userAnswer: typed,
     difficulty: "medium",
     appliedScenarios: false,
+    concise: true,
   });
 
   return {

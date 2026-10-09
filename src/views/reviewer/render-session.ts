@@ -1448,7 +1448,7 @@ export function renderSessionMode(args: Args) {
       const ta = activeDocument.createElement("textarea");
       ta.className = "learnkit-ai-answer textarea w-full";
       ta.rows = 4;
-      ta.placeholder = "Scrivi (o detta) la tua risposta…  Ctrl/Cmd+Invio per valutare";
+      ta.placeholder = "Write (or dictate) the answer\u2026  Ctrl/Cmd+Emter to evaluate";
       ta.value = args.aiDraft ?? "";
       ta.addEventListener("input", () => args.onAiDraft?.(ta.value));
       ta.addEventListener("keydown", (e) => {
@@ -1469,14 +1469,14 @@ export function renderSessionMode(args: Args) {
         const box = activeDocument.createElement("div");
         box.className = "learnkit-ai-feedback card p-3 text-sm";
         if (st === "loading") {
-          box.textContent = "Valutazione in corso…";
+          box.textContent = "Evaluations in progress..";
         } else if (isAiResult(st)) {
           box.createEl("strong", { text: `${Math.round(st.scorePercent)}% — consigliato: ${st.suggested}` });
           box.createEl("p", { text: st.feedback });
           if (st.missed.length) box.createEl("p", { text: "Mancano: " + st.missed.join("; ") });
           if (st.wrong.length) box.createEl("p", { text: "Errori: " + st.wrong.join("; ") });
         } else {
-          box.textContent = `Valutazione AI non riuscita: ${st.error}`;
+          box.textContent = `AI evaluation failed: ${st.error}`;
         }
         section.appendChild(box);
       }
@@ -1655,7 +1655,7 @@ export function renderSessionMode(args: Args) {
     );
     if (args.aiGradeEnabled && !args.showAnswer && !graded) {
       mainRow.appendChild(makeTextButton({
-        label: "Valuta con AI",
+        label: "Check with AI",
         className: "learnkit-btn-toolbar",
         onClick: () => {
           const v = section.querySelector<HTMLTextAreaElement>(".learnkit-ai-answer")?.value ?? "";

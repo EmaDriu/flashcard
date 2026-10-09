@@ -1242,11 +1242,19 @@ function buildChatCompletionsBody(args: {
     variant === "default" &&
     mode === "json" &&
     provider !== "openrouter" &&
+    provider !== "custom" &&
     !isReasoningModelId(model);
   const omitTemperature = variant === "compatibility"
     || shouldOmitTemperature(provider, model)
     || (provider === "deepseek" && variant === "deepseek-compat");
-
+  const isLocalProvider = provider === "custom";
+  const localJsonFormat = {
+    type: "json_schema",
+    json_schema: {
+      name: "json_response",
+      schema: { type: "object" },
+    },
+  };
   return {
     model,
     ...(stream ? { stream: true } : {}),
@@ -1265,7 +1273,8 @@ function buildChatCompletionsBody(args: {
       ? { conversation_id: conversationId.trim() }
       : {}),
     ...(omitTemperature ? {} : { temperature: 0.4 }),
-    ...(useJsonResponseFormat ? { response_format: { type: "json_object" } } : {}),
+    ...(useJsonResponseFormat ? { response_format: { type: localJsonFormat } } : {}),
+    ...(isLocalProvider ? { chat_template_kwargs: { enable_thinking: true } } : {}),
   };
 }
 
@@ -1473,7 +1482,7 @@ export async function requestStudyAssistantCompletionDetailed(params: {
           provider: settings.provider,
           endpoint,
           status,
-            attachmentRoute: activeAttachmentRoute,
+          attachmentRoute: activeAttachmentRoute,
           detail,
           code,
           errorType,
@@ -1482,7 +1491,7 @@ export async function requestStudyAssistantCompletionDetailed(params: {
           originalError: err,
         });
       }
-        throw attachAttachmentRouteToError(errorFromUnknown(err), activeAttachmentRoute);
+      throw attachAttachmentRouteToError(errorFromUnknown(err), activeAttachmentRoute);
     }
 
     if (res.status < 200 || res.status >= 300) {
